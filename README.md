@@ -13,10 +13,10 @@ de Vodafone que roba el número de teléfono de la víctima para realizar
 SIM Swapping e interceptar códigos 2FA.
 
 ## URL del SMS
-https://goo.su/-9Vodafone
+`https://goo.su/-9Vodafone`
 
 ## URL final de phishing
-https://vodafone-one-09.cloudaccess.host/v/payment/factura_d/anchor_002.htm
+`https://vodafone-one-09.cloudaccess.host/v/payment/factura_d/anchor_002.htm`
 
 ## Infraestructura del atacante
 - **IP:** 82.202.170.126 (Rusia)
@@ -44,8 +44,8 @@ https://vodafone-one-09.cloudaccess.host/v/payment/factura_d/anchor_002.htm
 ## IoCs confirmados
 | Tipo | Valor |
 |------|-------|
-| URL SMS | goo_su_/vodafone |
-| URL phishing | //vodafone-one-09[.]cloudaccess[.]host/v/payment/factura_d/anchor_002[.]htm |
+| URL SMS | https://goo.su/-9Vodafone |
+| URL phishing | https://vodafone-one-09.cloudaccess.host/v/payment/factura_d/anchor_002.htm |
 | IP | 82.202.170.126 |
 | Hosting | cloudaccess.host |
 | Campo HTML | payment_invoice[phone] |
