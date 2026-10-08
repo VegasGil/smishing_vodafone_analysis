@@ -44,8 +44,8 @@ SIM Swapping e interceptar códigos 2FA.
 ## IoCs confirmados
 | Tipo | Valor |
 |------|-------|
-| URL SMS | https://goo.su/-9Vodafone |
-| URL phishing | https://vodafone-one-09.cloudaccess.host/v/payment/factura_d/anchor_002.htm |
+| URL SMS | `https://goo.su/-9Vodafone` |
+| URL phishing | `https://vodafone-one-09.cloudaccess.host/v/payment/factura_d/anchor_002.htm` |
 | IP | 82.202.170.126 |
 | Hosting | cloudaccess.host |
 | Campo HTML | payment_invoice[phone] |
