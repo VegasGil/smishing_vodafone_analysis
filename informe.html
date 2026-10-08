@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informe de incidente: smishing con suplantación de Vodafone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="cover">
+  <div class="wrap">
+    <h1>Smishing que suplanta a Vodafone para robar números de teléfono</h1>
+    <p class="lead">Análisis forense de la página de phishing, su infraestructura y los indicadores que permiten bloquearla.</p>
+    <dl class="meta">
+      <div><dt>Fecha del análisis</dt><dd>08/10/2026</dd></div>
+      <div><dt>Severidad</dt><dd><span class="sev">Alta</span></dd></div>
+      <div><dt>Vector</dt><dd>SMS con enlace acortado</dd></div>
+      <div><dt>Objetivo del atacante</dt><dd>Captura de teléfono y SIM swapping</dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav aria-label="Secciones"><div class="wrap">
+  <a href="#resumen">Resumen</a><a href="#cadena">Cadena del ataque</a><a href="#hallazgos">Hallazgos</a>
+  <a href="#iocs">Indicadores</a><a href="#evidencias">Evidencias</a><a href="#acciones">Recomendaciones</a>
+</div></nav>
+
+<main>
+<section id="resumen">
+  <h2>Resumen ejecutivo</h2>
+  <p class="sub">Lo esencial para decidir, en menos de un minuto.</p>
+  <p class="verdict">La víctima recibe un SMS con un enlace acortado que lleva a una réplica de Vodafone alojada en <strong>vodafone-one-09.cloudaccess.host</strong>. El formulario pide el número de teléfono para interceptar después los SMS de verificación mediante SIM swapping.</p>
+  <div class="cols">
+    <div class="col"><h3>Qué ocurrió</h3><p>Una página clonada de Vodafone simula una factura pendiente y recoge el teléfono en el campo <code>payment_invoice[phone]</code>.</p></div>
+    <div class="col"><h3>Qué sabemos de la infraestructura</h3><p>La IP 82.202.170.126 está asociada a un servidor nginx en Rusia. Los JavaScript descargados devuelven páginas 404.</p></div>
+    <div class="col"><h3>Qué hay que hacer ya</h3><p>Bloquear dominio, IP y acortador, notificar a las plataformas de reporte y avisar a quien haya abierto el enlace.</p></div>
+  </div>
+</section>
+
+<section id="cadena">
+  <h2>Cadena del ataque</h2>
+  <p class="sub">Del mensaje a la toma de control de la línea.</p>
+  <ol class="chain">
+    <li><b>SMS</b><span>Mensaje con aviso de factura y enlace <code>goo.su/-9Vodafone</code></span></li>
+    <li><b>Redirección</b><span>El acortador lleva al dominio <code>vodafone-one-09.cloudaccess.host</code></span></li>
+    <li><b>Página clonada</b><span>Imita el portal de Vodafone con un importe de factura</span></li>
+    <li><b>Captura</b><span>El formulario recoge el teléfono de la víctima</span></li>
+    <li><b>SIM swapping</b><span>Con el número, el atacante intenta interceptar los SMS de verificación</span></li>
+  </ol>
+</section>
+
+<section id="hallazgos">
+  <h2>Hallazgos técnicos</h2>
+  <p class="sub">Qué se descubrió al revisar los archivos descargados.</p>
+  <div class="split">
+    <div>
+      <ul class="plain">
+        <li>Los 20 archivos <code>.js.descargar</code> pesan 13 970 bytes y son todos la misma página 404, con título en ruso.</li>
+        <li>Los archivos de 146 bytes son páginas «404 Not Found» de nginx.</li>
+        <li>Un temporizador de 36 000 ms redirige a <code>/</code> en esa página de error.</li>
+        <li>Las URLs de Yandex Metrica, Mail.ru, BotD, DigitalCaramel y Google Tag Manager pertenecen a la plantilla 404 del hosting, no al atacante.</li>
+        <li>El HTML de phishing sí existe y contiene el formulario de robo.</li>
+      </ul>
+    </div>
+    <div class="panel"><b>Consecuencia para el análisis</b><p>No se puede determinar cómo ni adónde se enviaban los datos, porque el JavaScript de captura no está disponible en el servidor.</p></div>
+  </div>
+  <p class="note"><strong>Hipótesis, no confirmada:</strong> que el atacante haya retirado los scripts a propósito. También pueden ser rutas que nunca existieron en ese servidor o bloqueo selectivo de analistas. Conviene verificarlo contra los <code>src</code> del propio HTML.</p>
+</section>
+
+<section id="iocs">
+  <h2>Indicadores de compromiso</h2>
+  <p class="sub">Separados entre los que son del atacante y los que solo pertenecen al hosting.</p>
+  <div class="panel chart">
+    <svg id="donut" class="donut" viewBox="0 0 200 200" role="img" aria-label="Proporción de indicadores confirmados y no confirmados"></svg>
+    <ul class="legend" id="legend"></ul>
+  </div>
+  <div class="filters" role="group" aria-label="Filtrar indicadores">
+    <button data-f="all" aria-pressed="true">Todos</button>
+    <button data-f="ok" aria-pressed="false">Confirmados</button>
+    <button data-f="no" aria-pressed="false">No confirmados</button>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Tipo</th><th>Valor</th><th>Relevancia</th><th>Estado</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+</section>
+
+<section id="evidencias">
+  <h2>Evidencias</h2>
+  <p class="sub">Capturas del análisis. Pulsa una para ampliarla.</p>
+  <div class="gallery" id="gallery"></div>
+</section>
+
+<section id="acciones">
+  <h2>Recomendaciones</h2>
+  <p class="sub">Ordenadas por urgencia.</p>
+  <div class="recs">
+    <div class="panel rec"><h3>Contención inmediata</h3><ul class="plain">
+      <li>Bloquear el dominio, la IP y <code>goo.su/-9Vodafone</code> en proxy, DNS y EDR.</li>
+      <li>Buscar en los registros accesos al dominio y avisar a los usuarios que lo abrieron.</li>
+      <li>Si alguien introdujo su número, contactar con Vodafone para proteger la línea.</li>
+    </ul></div>
+    <div class="panel rec"><h3>Notificación</h3><ul class="plain">
+      <li>Enviar el caso a URLhaus y a Google Safe Browsing.</li>
+      <li>Reportar el abuso al proveedor de hosting y al acortador.</li>
+      <li>Informar a Vodafone de la suplantación de su marca.</li>
+    </ul></div>
+    <div class="panel rec"><h3>Prevención</h3><ul class="plain">
+      <li>Sustituir la verificación por SMS con aplicaciones de autenticación o llaves FIDO2.</li>
+      <li>Activar el PIN de portabilidad con el operador.</li>
+      <li>Formar al personal para reconocer SMS con enlaces acortados.</li>
+    </ul></div>
+  </div>
+</section>
+</main>
+
+<footer>Informe generado el 08/10/2026. Las capturas deben estar en la misma carpeta que este archivo.</footer>
+
+<dialog id="lb"><img alt=""><p></p></dialog>
+<script src="script.js"></script>
+</body>
+</html>
