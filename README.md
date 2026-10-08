@@ -44,7 +44,7 @@ https://vodafone-one-09.cloudaccess.host/v/payment/factura_d/anchor_002.htm
 ## IoCs confirmados
 | Tipo | Valor |
 |------|-------|
-| URL SMS | //goo[.]su/-9Vodafone |
+| URL SMS | //goo  [.]  su/  -9Vodafone |
 | URL phishing | //vodafone-one-09[.]cloudaccess[.]host/v/payment/factura_d/anchor_002[.]htm |
 | IP | 82.202.170.126 |
 | Hosting | cloudaccess.host |
