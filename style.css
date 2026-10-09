@@ -1,4 +1,4 @@
-  :root{
+:root{
   --ink:#14202E; --paper:#F4F6F9; --card:#FFFFFF; --line:#D8DEE6;
   --muted:#586476; --red:#C8102E; --teal:#0F766E; --amber:#A8650C;
   --serif:"Newsreader",Georgia,"Times New Roman",serif;
@@ -107,3 +107,11 @@ footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:var
   section{break-inside:avoid;padding-top:28px}
   .fig button{cursor:default}
 }
+
+
+/* Licencia */
+.lic summary{cursor:pointer;font-weight:600;font-size:.95rem}
+.lic summary:hover{color:var(--red)}
+.license{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);column-count:2;column-gap:40px;font-size:.84rem;line-height:1.6;color:var(--muted);text-align:justify;hyphens:auto}
+.license p{margin:0 0 12px;max-width:none;break-inside:avoid}
+@media(max-width:760px){.license{column-count:1;text-align:left}}
